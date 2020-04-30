@@ -1,0 +1,24 @@
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from gspread_dataframe import get_as_dataframe
+
+# use creds to create a client to interact with the Google Drive API
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
+
+creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret1.json', scope)
+client = gspread.authorize(creds)
+
+sheet = client.open("Cal 2024 — Roommate Search (Responses)").get_worksheet(0)
+male_sheet = client.open("Cal 2024 — Roommate Search (Responses)").get_worksheet(1)
+column = sheet.col_values(3)
+males = 0
+row_count = 0
+for y in range(230,(len(column))):
+    if column[y] == "Male":
+        males+=1
+        male_sheet.append_row(sheet.row_values(y+1))
+        
+        
+
+print("The number of male students is " + str(males))
+
